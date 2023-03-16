@@ -1,0 +1,9 @@
+FROM ubuntu22.0.4:shawood
+WORKDIR /opt/
+ADD hold.sh
+RUN setenforce 0
+RUN apt install -y mysql-server-8.0
+
+EXPOSE 3306/tcp
+EXPOSE 33060/tcp
+EXPOSE 33061/tcp
