@@ -45,3 +45,10 @@ create user root@'%' identified by 'abcd1234!';
 grant all privileges on *.* to root@'%' with grant option;
 ```
 
+### Ubuntu 22
+
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'abcd1234!';
+FLUSH PRIVILEGES;
+```bash
+sudo vim /etc/mysql/mysql.conf.d/mysqld.cnf
+```
