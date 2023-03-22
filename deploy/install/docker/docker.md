@@ -41,3 +41,40 @@ sudo docker run hello-world
 mysql --version
 ```
 
+### ubuntu 安装docker
+```
+sudo apt-get update
+sudo apt-get install \
+    ca-certificates \
+    curl \
+    gnupg \
+    lsb-release
+
+sudo mkdir -m 0755 -p /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+
+sudo chmod a+r /etc/apt/keyrings/docker.gpg
+sudo apt-get update
+
+# List the available versions:
+apt-cache madison docker-ce | awk '{ print $3 }'
+
+VERSION_STRING=5:20.10.23~3-0~ubuntu-jammy
+sudo apt-get install docker-ce=$VERSION_STRING docker-ce-cli=$VERSION_STRING containerd.io docker-buildx-plugin docker-compose-plugin
+
+
+sudo systemctl enable docker.service
+sudo systemctl enable containerd.service
+```
+
+### ubuntu 卸载ubuntu
+```
+sudo apt-get purge docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin docker-ce-rootless-extras
+
+sudo rm -rf /var/lib/docker
+sudo rm -rf /var/lib/containerd
+```
+
+
+### docker 命令详解
+https://docs.docker.com/engine/reference/commandline/logs/

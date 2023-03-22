@@ -39,16 +39,69 @@ update user set host = '%' where user = 'root';
 flush privileges;
 ```
 
+### wsl 安装mysql
+```bash
+# 安装
+wget  https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-boost-8.0.32.tar.gz
+
+tar -zxvf mysql-boost-8.0.32.tar.gz
+cd mysql-8.0.32
+cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DMYSQL_DATADIR=/dbdata/mysql/data -DWITH_BOOST=boost -DFORCE_INSOURCE_BUILD=ON
+
+sudo make && make install
+
+groupadd mysql
+useradd -g mysql mysql
+mkdir -p /dbdata/mysql/data
+chown -R mysql:mysql /usr/local/mysql
+chown -R mysql:mysql /dbdata/mysql
+# 初始化
+sudo /usr/local/mysql/bin/mysqld --initialize --user=mysql --basedir=/usr/local/mysql --datadir=/dbdata/mysql/data
 ```
+
+```
+# 配置my.cnfvim /etc/my.cnf
+# 然后写入以下内容 
+[client]
+socket = /tmp/mysql.sock
+ 
+[mysqld]
+socket = /tmp/mysql.sock
+basedir = /usr/local/mysql
+datadir = /dbdata/mysql/data
+
+# 配置服务项
+
+sudo cp /usr/local/mysql/support-files/mysql.server /etc/init.d/mysqld
+sudo chmod +x /etc/init.d/mysqld 
+update-rc.d mysqld defaults
+service mysqld start
+
+# 添加环境变量
+
+sudo vim /etc/profile
+
+# 最后一行添加
+
+# MySQL PATH
+export PATH=/usr/local/mysql/bin:$PATH
+
+# 生效
+source /etc/profile
+```
+### 允许远程连接
+```bash
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'abcd1234!';
 # 允许mysql远程访问
 create user root@'%' identified by 'abcd1234!';
 grant all privileges on *.* to root@'%' with grant option;
-```
-
-### Ubuntu 22
-
-ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'abcd1234!';
 FLUSH PRIVILEGES;
-```bash
 sudo vim /etc/mysql/mysql.conf.d/mysqld.cnf
+```
+systemctrl 管理服务
+wsl 使用service
+```
+systemctl start mysqld 
+systemctl stop mysqld
+systemctl restart mysqld
 ```
