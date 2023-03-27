@@ -36,10 +36,6 @@ sudo docker run hello-world
 
 # TODO 更换docker国内源
 
-#
-\ apt update \ apt install -y mysql-server-8.0 \
-mysql --version
-```
 
 ### ubuntu 安装docker
 ```
