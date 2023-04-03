@@ -1,0 +1,11 @@
+FROM ubuntu:22.04
+WORKDIR /opt/
+ADD hold.sh sources.list /opt/
+RUN cp /etc/apt/sources.list /etc/apt/sources.list.backup && cp /opt/sources.list /etc/apt/sources.list
+RUN rm -f /bin/sh && ln -s /bin/bash /bin/sh
+RUN echo "shawood is coming!"
+RUN apt update 
+RUN apt upgrade -y
+RUN apt install -y vim net-tools wget 
+
+CMD "bash /opt/hold.sh"
