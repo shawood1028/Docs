@@ -23,6 +23,7 @@ docker run \
   -p 50000:50000 \
   -v /home/jenkins_home:/var/jenkins_home \
   -v /var/run/docker.sock:/var/run/docker.sock \
+  -e TZ=Asia/Shanghai \
   jenkins:1.0
 
 sudo chown -R 1000 /home/jenkins_home/
