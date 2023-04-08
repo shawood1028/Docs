@@ -46,12 +46,12 @@ mvn -version
    找到<mirrors></mirrors>标签对，添加一下代码：
 
    ```xml
-       <mirror>
-            <id>alimaven</id>
-            <name>aliyun maven</name>
-            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
-            <mirrorOf>central</mirrorOf>
-       </mirror>
+    <mirror>
+        <id>alimaven</id>
+        <name>aliyun maven</name>
+        <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+        <mirrorOf>central</mirrorOf>
+    </mirror>
    ```
 
    指定下载资源位置

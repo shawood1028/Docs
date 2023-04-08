@@ -1,0 +1,67 @@
+    <!-- 项目pom文件下 project标签下添加  -->
+    <distributionManagement>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <name>corp nexus-snapshots</name>
+            <url>http://47.101.138.195:8081/repository/greload/nexus-snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>nexus-releases</id>
+            <name>corp nexus-releases</name>
+            <url>http://47.101.138.195:8081/repository/greload/nexus-releases</url>
+        </repository>
+    </distributionManagement>
+
+
+    <!-- maven 配置文件 servers标签下添加  -->
+    <server>
+        <id>nexus-releases</id>
+        <username>greload-deply</username>
+        <password>abcd1234!</password>
+    </server>    
+    <server>
+        <id>nexus-snapshots</id>
+        <username>greload-deply</username>
+        <password>abcd1234!</password>
+    </server>
+    <!-- maven 配置文件 mirrors标签下添加  -->
+    <mirror>
+        <id>greload-nexus</id>
+        <mirrorOf>nexus</mirrorOf>
+        <url>http://47.101.138.195:8081/repository/greload/</url>
+    </mirror>
+
+    <!--maven 配置文件 profiles 标签下添加 -->
+    <profile>
+        <id>nexus</id>
+        <repositories>
+            <repository>
+                <id>nexus-releases</id>
+                <url>http://47.101.138.195:8081/repository/greload/</url>
+                <releases>
+                    <enabled>true</enabled>
+                </releases>
+                <snapshots>
+                    <enabled>true</enabled>
+                </snapshots>
+            </repository>
+        </repositories>
+        <pluginRepositories>
+            <pluginRepository>
+                <id>nexus-snapshots</id>
+                <url>http://47.101.138.195:8081/repository/greload/</url>
+                <releases>
+                    <enabled>true</enabled>
+                </releases>
+                <snapshots>
+                    <enabled>true</enabled>
+                </snapshots>
+            </pluginRepository>
+        </pluginRepositories>
+    </profile>
+
+    <!-- maven 配置文件 settings标签下添加-->
+    <activeProfiles>
+        <activeProfile>nexus</activeProfile>
+    </activeProfiles>
+

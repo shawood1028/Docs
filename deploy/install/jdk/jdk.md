@@ -5,6 +5,7 @@
 oracle 下载 jdk-8u361-linux-x64.tar.gz
 
 ```bash
+mkdir /usr/lib/jvm/
 tar -xzf jdk-8u361-linux-x64.tar.gz -C /usr/lib/jvm/
 vim /etc/profile
 ```

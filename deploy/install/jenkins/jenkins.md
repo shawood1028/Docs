@@ -11,6 +11,7 @@ docker run \
   -p 50000:50000 \
   -v /home/jenkins_home:/var/jenkins_home \
   -v /var/run/docker.sock:/var/run/docker.sock \
+  --restart=always
   jenkins/jenkins:centos7-jdk11
 
 sudo chown -R 1000 /home/jenkins_home/
@@ -41,3 +42,8 @@ nohup java -jar jenkins.war --httpPort=8080 > jenkins.log 2>&1 &
 # 删除docker镜像残留文件
 sudo rm -rf /home/jenkins_home  /etc/localtime
 ```
+
+### 打包流程
+1. git，svn更新，项目内打好jar包
+2. 发送jar包至对应服务器
+3. 远程服务器停止服务，删除原有jar包，启动服务

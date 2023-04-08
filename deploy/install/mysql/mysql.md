@@ -12,15 +12,14 @@ rpm -qa|grep mysql
 
 wget http://repo.mysql.com/mysql80-community-release-el7-7.noarch.rpm
 rpm -ivh mysql80-community-release-el7-7.noarch.rpm
-yum repolist all | grep mysql
+
+yum install -y mysql-community-server
+systemctl start mysqld
+mysql -V
+systemctl status mysqld
+systemctl enable mysqld
+systemctl daemon-reload
 systemctl list-unit-files|grep mysqld
-systemctl enable mysqld.service
-
-# 查看是否启动MySQL服务
-ps -ef|grep mysql
-
-# 启动服务
-systemctl start mysqld.service
 
 mysqld --initialize
 
@@ -91,12 +90,25 @@ source /etc/profile
 ```
 ### 允许远程连接
 ```bash
+#mysql初始化
+mysqld --initialize
+# x;>bp7TKR1e_
+grep 'temporary password' /var/log/mysqld.log
+mysql -u root -p 
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'Solomon123@!';
+set global validate_password.policy=LOW;
 ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'abcd1234!';
 # 允许mysql远程访问
 create user root@'%' identified by 'abcd1234!';
 grant all privileges on *.* to root@'%' with grant option;
 FLUSH PRIVILEGES;
-sudo vim /etc/mysql/mysql.conf.d/mysqld.cnf
+sudo vim /etc/my.cnf
+# 添加配置
+[mysqld]
+port=3306
+bind-address=0.0.0.0
+# 重启服务
+systemctl restart mysqld
 ```
 systemctrl 管理服务
 wsl 使用service
@@ -105,3 +117,5 @@ systemctl start mysqld
 systemctl stop mysqld
 systemctl restart mysqld
 ```
+
+### centos允许远程连接
