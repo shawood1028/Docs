@@ -6,13 +6,26 @@ docker pull jenkins/jenkins:centos7-jdk11
 docker run \
   -u root \
   -d \
-  --name jenkins \
+  --name jenkins2 \
+  --net=host \
   -p 8080:8080 \
   -p 50000:50000 \
   -v /home/jenkins_home:/var/jenkins_home \
   -v /var/run/docker.sock:/var/run/docker.sock \
   --restart=always
   jenkins/jenkins:centos7-jdk11
+
+docker run \
+  -u root \
+  -d \
+  --name jenkins2 \
+  --net=host \
+  -p 8080:8080 \
+  -p 50000:50000 \
+  -v /home/jenkins_home:/var/jenkins_home \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -e TZ=Asia/Shanghai \
+  jenkins:1.0
 
 sudo chown -R 1000 /home/jenkins_home/
 ```

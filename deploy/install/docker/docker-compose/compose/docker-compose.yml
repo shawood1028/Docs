@@ -1,0 +1,24 @@
+version: '1.0'
+services:
+  nexus:
+    image: sonatype/nexus3:3.50.0
+    ports: 
+      - 18081:8081
+    volumes:
+      - "/data/docker/nexus-data:/nexus-data"
+    networks:
+      app_net:
+        ipv4_address: 172.16.238.10
+
+  
+  jenkins:
+    image: jenkins/jenkins:centos7-jdk11
+    ports:
+      - 8080:8080
+      - 50000:50000
+    volumes:
+      - "/home/jenkins_home:/var/jenkins_home"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    networks:
+      app_net:
+        ipv4_address: 172.16.238.20
