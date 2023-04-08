@@ -117,5 +117,3 @@ systemctl start mysqld
 systemctl stop mysqld
 systemctl restart mysqld
 ```
-
-### centos允许远程连接
