@@ -26,6 +26,11 @@ chown -R es:es /data/elk/
 ```
 
 ```bash
+#启动服务
+./bin/logstash -f config/greload.yml
+```
+
+```bash
 # 调整进程最大打开文件数
 # 临时设置
 ulimit -n 65535
@@ -76,7 +81,7 @@ cluster.initial_master_nodes: [“node-1”] # 首次启动指定的Master节点
 
 ```bash
 wget https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-8.6.2-linux-x86_64.tar.gz
-
+tar -xzf filebeat-8.6.2-linux-x86_64.tar.gz -C /opt/ && mv /opt/filebeat-8.6.2-linux-x86_64 /opt/filebeat
 cd /opt/filebeat &&  nohup ./filebeat -e -c filebeat.yml > filebeat.log &
 
 # 查看filebeat运行状态

@@ -12,7 +12,7 @@ docker run \
   -p 50000:50000 \
   -v /home/jenkins_home:/var/jenkins_home \
   -v /var/run/docker.sock:/var/run/docker.sock \
-  --restart=always
+  --restart=always \
   jenkins/jenkins:centos7-jdk11
 
 docker run \
@@ -25,6 +25,7 @@ docker run \
   -v /home/jenkins_home:/var/jenkins_home \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -e TZ=Asia/Shanghai \
+  --restart=always \
   jenkins:1.0
 
 sudo chown -R 1000 /home/jenkins_home/
@@ -38,7 +39,7 @@ sudo usermod -aG docker $USER
 newgrp docker
 ```
 jenkins地址
-http://192.168.20.200:8080
+http://x.x.x.x:8080
 
 账号密码
 
@@ -60,3 +61,16 @@ sudo rm -rf /home/jenkins_home  /etc/localtime
 1. git，svn更新，项目内打好jar包
 2. 发送jar包至对应服务器
 3. 远程服务器停止服务，删除原有jar包，启动服务
+
+    <mirror>
+        <id>greload-nexus</id>
+        <mirrorOf>nexus</mirrorOf>
+        <url>http://localhost:8081/repository/greload/</url>
+    </mirror>
+    <!-- 阿里镜像 -->
+    <mirror>
+            <id>alimaven</id>
+            <mirrorOf>central</mirrorOf>
+            <name>aliyun maven</name>
+            <url>http://maven.aliyun.com/nexus/content/repositories/central/</url>
+    </mirror>

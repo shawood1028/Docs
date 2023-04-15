@@ -23,7 +23,7 @@ systemctl list-unit-files|grep mysqld
 
 mysqld --initialize
 
-# 临时密码    &g1dY8FcKEUX
+# 临时密码    u,#oL>jBa5;Y
 grep 'temporary password' /var/log/mysqld.log
 
 # ij4teeD+iebed_oh
@@ -117,3 +117,6 @@ systemctl start mysqld
 systemctl stop mysqld
 systemctl restart mysqld
 ```
+
+### mysql使用
+CREATE DATABASE `island_stats` CHARACTER SET utf8 COLLATE utf8_general_ci;

@@ -10,6 +10,12 @@ tar -xzf jdk-8u361-linux-x64.tar.gz -C /usr/lib/jvm/
 vim /etc/profile
 ```
 
+```bash
+sudo mkdir /usr/lib/jvm/
+sudo tar -xzf jdk-8u361-linux-x64.tar.gz -C /usr/lib/jvm/
+sudo vim /etc/profile
+```
+
 #最后一行粘贴以下
 
 ```bash

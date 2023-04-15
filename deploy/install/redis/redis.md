@@ -15,5 +15,9 @@ ps -ef | grep redis
 将bind 127.0.0.1 注释或者改为bind 0.0.0.0
 requirepass abcd1234!
 #  uNiepoh7aighoc/e
+# 复制配置文件
+cp redis.conf /usr/local/redis/
+
+redis redis-cli -h 127.0.0.1 -p 6379 shutdown
 ```
 
