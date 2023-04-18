@@ -26,7 +26,7 @@ docker-ce.x86_64            3:20.10.9-3.el7                     docker-ce-stable
 
 
 # 安装指定版本
-sudo yum install docker-ce-23.0.1 docker-ce-cli-23.0.1 containerd.io docker-buildx-plugin docker-compose-plugin
+sudo yum install -y docker-ce-23.0.1 docker-ce-cli-23.0.1 containerd.io docker-buildx-plugin docker-compose-plugin
 
 
 sudo systemctl enable docker
@@ -34,6 +34,9 @@ sudo systemctl start docker
 
 
 sudo docker run hello-world
+
+# 免去sudo命令
+sudo usermod -aG docker ${USER}
 
 # TODO 更换docker国内源
 

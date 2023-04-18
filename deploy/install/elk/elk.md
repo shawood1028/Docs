@@ -8,8 +8,8 @@ jdk版本要求:
 # 创建目录下载资源
 mkdir /opt/elk && cd /opt/elk/
 wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.6.2-linux-x86_64.tar.gz
-wget https://artifacts.elastic.co/downloads/kibana/kibana-8.6.2-linux-x86_64.tar.gz
 wget https://artifacts.elastic.co/downloads/logstash/logstash-8.6.2-linux-x86_64.tar.gz
+wget https://artifacts.elastic.co/downloads/kibana/kibana-8.6.2-linux-x86_64.tar.gz
 # 分发二进制包
 scp kibana-8.6.2-linux-x86_64.tar.gz logstash-8.6.2-linux-x86_64.tar.gz root@192.168.0.212:/opt/elk/
 # 解压
@@ -23,11 +23,6 @@ chown -R es:es elasticsearch kibana logstash
 su es
 mkdir -p /data/elk/ 
 chown -R es:es /data/elk/ 
-```
-
-```bash
-#启动服务
-./bin/logstash -f config/greload.yml
 ```
 
 ```bash
@@ -54,9 +49,20 @@ sysctl -p
 
 **集群配置**
 
-停止es:
+```bash
+# 生成kibana所需要的token
+./bin/elasticsearch-create-enrollment-token -s kibana --url "https://127.0.0.1:9200"
+#启动服务
+nohup ./bin/logstash -f config/greload.yml &
+
+bin/logstash -f logstash.conf --config.reload.automatic
+bin/logstash -f logstash.conf --config.reload.automatic
+```
+
 
 ```bash
+# 启动es
+# 停止es
 ./bin/elasticsearch -d -p pid
 
 kill -SIGTERM (es pid)
@@ -77,12 +83,66 @@ discovery.seed_hosts: [“192.168.31.61”, “192.168.31.62”,“192.168.31.63
 cluster.initial_master_nodes: [“node-1”] # 首次启动指定的Master节点
 ```
 
-#### Filebeat安装
+#### Filebeat安装（old）
 
 ```bash
 wget https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-8.6.2-linux-x86_64.tar.gz
 tar -xzf filebeat-8.6.2-linux-x86_64.tar.gz -C /opt/ && mv /opt/filebeat-8.6.2-linux-x86_64 /opt/filebeat
 cd /opt/filebeat &&  nohup ./filebeat -e -c filebeat.yml > filebeat.log &
+
+# 查看filebeat运行状态
+ps -ef | grep filebeat
+
+# 查看filebeat日志
+tail -f -n 100 /var/log/messages
+```
+
+#### 阿里云(new)
+
+cd /usr/local
+
+##### 安装elasticsearch 
+
+```
+wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.6.2-linux-x86_64.tar.gz
+sudo tar -xzf elasticsearch-8.6.2-linux-x86_64.tar.gz -C /usr/local
+sudo mv /usr/local/elasticsearch-8.6.2 -C /usr/local/elasticsearch
+sudo chown -R ecs-user:ecs-user /usr/local/elasticsearch
+```
+
+##### 安装logstash
+
+```bash
+# 下载安装包
+wget https://artifacts.elastic.co/downloads/logstash/logstash-8.6.2-linux-x86_64.tar.gz
+# 解压安装包
+sudo tar -xzf logstash-8.6.2-linux-x86_64.tar.gz -C /usr/local
+sudo mv /usr/local/logstash-8.6.2 /usr/local/logstash
+sudo chown -R ecs-user:ecs-user /usr/local/logstash
+```
+
+##### 安装kibana
+
+```bash
+# 下载安装包
+wget https://artifacts.elastic.co/downloads/kibana/kibana-8.6.2-linux-x86_64.tar.gz
+sudo tar -xzf kibana-8.6.2-linux-x86_64.tar.gz -C /usr/local
+sudo mv /usr/local/kibana-8.6.2 /usr/local/kibana
+sudo chown -R ecs-user:ecs-user /usr/local/kibana
+```
+
+
+
+##### 安装filebeat
+
+```bash
+wget https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-8.6.2-linux-x86_64.tar.gz
+sudo tar -xzf filebeat-8.6.2-linux-x86_64.tar.gz -C /usr/local/ && sudo mv /usr/local/filebeat-8.6.2-linux-x86_64 /usr/local/filebeat
+sudo chown -R ecs-user:ecs-user /usr/local/filebeat
+# 修改配置
+vim /usr/local/filebeat/filebeat.yml
+# 测试
+cd /usr/local/filebeat &&  nohup ./filebeat -e -c filebeat.yml > filebeat.log &
 
 # 查看filebeat运行状态
 ps -ef | grep filebeat
@@ -100,43 +160,32 @@ tail -f -n 100 /var/log/messages
 ```
 
 ```
+# 设置为系统服务
 cd /usr/lib/systemd/system && vim filebeat.service
-# filebeat.service
+sudo vim /usr/lib/systemd/system/filebeat.service
+
+# filebeat.service 添加以下内容
 [Unit]
 Description=filebeat server daemon
-Documentation=/opt/filebeat/filebeat -help
+Documentation=/usr/local/filebeat/filebeat -help
 Wants=network-online.target
 After=network-online.target
- 
+
 [Service]
-User=root
-Group=root
-Environment="BEAT_CONFIG_OPTS=-c /opt/filebeat/filebeat.yml"
-ExecStart=/opt/filebeat/filebeat $BEAT_CONFIG_OPTS
+User=ecs-user
+Group=ecs-user
+ExecStart=/usr/local/filebeat/filebeat -e -c /usr/local/filebeat/filebeat.yml
 Restart=always
- 
+
 [Install]
 WantedBy=multi-user.target
 ```
 
 ```
-systemctl enable filebeat
-systemctl status filebeat
-systemctl start filebeat
+sudo systemctl enable filebeat
+sudo systemctl start filebeat
+sudo systemctl status filebeat
+
+sudo systemctl daemon-reload
+sudo systemctl restart filebeat
 ```
-
-
-
-#### Elastalert2 安装
-
-```bash
-# 拉取镜像
-docker pull jertel/elastalert2:2.10.0
-
-# 启动镜像
-docker run -itd --restart=always  --name elastalert2     -v /opt/elastalert/data:/opt/elastalert/data     -v /opt/elastalert/config.yaml:/opt/elastalert/config.yaml     -v /opt/elastalert/rules:/opt/elastalert/rules     -v /opt/elastalert/elastalert_modules:/opt/elastalert/elastalert_modules     -e ELASTICSEARCH_HOST="192.168.0.210"     -e ELASTICSEARCH_PORT=9200     -e CONTAINER_TIMEZONE="Asia/Shanghai"      -e SET_CONTAINER_TIMEZONE=True     -e TZ="Asia/Shanghai"     -e SET_CONTAINER_TIMEZONE=True     -e ELASTALERT_BUFFER_TIME=10      -e ELASTALERT_RUN_EVERY=1      jertel/elastalert2:2.10.0 --verbose
-
-# 进入容器
-docker exec -it elastalert2 bash
-```
-

@@ -1,7 +1,7 @@
 filebeat.inputs:
 
 - type: log
-  id: island-gateway
+  id: island-game
   enabled: true
   paths:
     - /opt/log/*.log
