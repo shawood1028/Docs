@@ -17,7 +17,9 @@ requirepass abcd1234!
 #  uNiepoh7aighoc/e
 # 复制配置文件
 cp redis.conf /usr/local/redis/
-
+#启动
+./bin/redis-server redis.conf
+#停止
 redis redis-cli -h 127.0.0.1 -p 6379 shutdown
 ```
 
