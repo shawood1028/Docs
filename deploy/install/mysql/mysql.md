@@ -23,11 +23,11 @@ systemctl list-unit-files|grep mysqld
 
 mysqld --initialize
 
-# 临时密码    u,#oL>jBa5;Y
+# 临时密码    u,#oL>jBa5;Y Kuq*8H#igv?o
 grep 'temporary password' /var/log/mysqld.log
 
 # ij4teeD+iebed_oh
-alter user 'root'@'localhost' identified by 'xxxxxxxxxx';
+alter user 'root'@'localhost' identified by 'abcd1234!';
 
 use mysql;
 
