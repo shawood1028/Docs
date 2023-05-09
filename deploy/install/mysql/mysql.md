@@ -21,22 +21,32 @@ systemctl enable mysqld
 systemctl daemon-reload
 systemctl list-unit-files|grep mysqld
 
-mysqld --initialize
-
-# 临时密码    u,#oL>jBa5;Y Kuq*8H#igv?o
-grep 'temporary password' /var/log/mysqld.log
-
-# ij4teeD+iebed_oh
-alter user 'root'@'localhost' identified by 'abcd1234!';
-
-use mysql;
-
-#修改root账户权限
-update user set host = '%' where user = 'root';
-
-#刷新权限
-flush privileges;
 ```
+
+### 允许远程连接
+```bash
+#mysql初始化
+mysqld --initialize
+# x;>bp7TKR1e_
+grep 'temporary password' /var/log/mysqld.log
+mysql -u root -p 
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'Solomon123@!';
+set global validate_password.policy=LOW;
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'abcd1234!';
+# 允许mysql远程访问
+create user root@'%' identified by 'abcd1234!';
+grant all privileges on *.* to root@'%' with grant option;
+FLUSH PRIVILEGES;
+sudo vim /etc/my.cnf
+# 添加配置
+[mysqld]
+port=3306
+bind-address=0.0.0.0
+# 重启服务
+systemctl restart mysqld
+
+### mysql使用
+CREATE DATABASE `island_stats` CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 ### wsl 安装mysql
 ```bash
@@ -58,8 +68,9 @@ chown -R mysql:mysql /dbdata/mysql
 sudo /usr/local/mysql/bin/mysqld --initialize --user=mysql --basedir=/usr/local/mysql --datadir=/dbdata/mysql/data
 ```
 
-```
-# 配置my.cnfvim /etc/my.cnf
+```bash
+# 配置my.cnf
+vim /etc/my.cnf
 # 然后写入以下内容 
 [client]
 socket = /tmp/mysql.sock
@@ -88,35 +99,3 @@ export PATH=/usr/local/mysql/bin:$PATH
 # 生效
 source /etc/profile
 ```
-### 允许远程连接
-```bash
-#mysql初始化
-mysqld --initialize
-# x;>bp7TKR1e_
-grep 'temporary password' /var/log/mysqld.log
-mysql -u root -p 
-ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'Solomon123@!';
-set global validate_password.policy=LOW;
-ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'abcd1234!';
-# 允许mysql远程访问
-create user root@'%' identified by 'abcd1234!';
-grant all privileges on *.* to root@'%' with grant option;
-FLUSH PRIVILEGES;
-sudo vim /etc/my.cnf
-# 添加配置
-[mysqld]
-port=3306
-bind-address=0.0.0.0
-# 重启服务
-systemctl restart mysqld
-```
-systemctrl 管理服务
-wsl 使用service
-```
-systemctl start mysqld 
-systemctl stop mysqld
-systemctl restart mysqld
-```
-
-### mysql使用
-CREATE DATABASE `island_stats` CHARACTER SET utf8 COLLATE utf8_general_ci;
