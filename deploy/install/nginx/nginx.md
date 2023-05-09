@@ -6,6 +6,16 @@ https://mp.weixin.qq.com/s?__biz=MzAwNTM5Njk3Mw==&mid=2247507800&idx=1&sn=310b7d
 
 ```bash
 yum install -y nginx
+systemctl start nginx
+nginx -v
+systemctl status nginx
+systemctl enable nginx
+systemctl daemon-reload
+
+# 验证配置文件
+nginx -t 
+# 重启nginx使配置文件生效
+nginx -s reload
 ```
 # nginx高可用部署
 
