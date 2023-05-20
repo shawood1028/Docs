@@ -2,17 +2,17 @@
 
 安装jdk
 
-oracle 下载 jdk-8u361-linux-x64.tar.gz
+oracle 下载 jdk-8u371-linux-x64.tar.gz
 
 ```bash
 mkdir /usr/lib/jvm/
-tar -xzf jdk-8u361-linux-x64.tar.gz -C /usr/lib/jvm/
+tar -xzf jdk-8u371-linux-x64.tar.gz -C /usr/lib/jvm/
 vim /etc/profile
 ```
 
 ```bash
 sudo mkdir /usr/lib/jvm/
-sudo tar -xzf jdk-8u361-linux-x64.tar.gz -C /usr/lib/jvm/
+sudo tar -xzf jdk-8u371-linux-x64.tar.gz -C /usr/lib/jvm/
 sudo vim /etc/profile
 ```
 
@@ -21,7 +21,7 @@ sudo vim /etc/profile
 ```bash
 # jdk环境变量配置
 
-export JAVA_HOME=/usr/lib/jvm/jdk1.8.0_361
+export JAVA_HOME=/usr/lib/jvm/jdk1.8.0_371
 export PATH=$JAVA_HOME/bin:$PATH
 export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
 
