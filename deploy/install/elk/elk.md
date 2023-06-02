@@ -137,8 +137,8 @@ sudo chown -R ecs-user:ecs-user /usr/local/kibana
 
 ```bash
 wget https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-8.6.2-linux-x86_64.tar.gz
-sudo tar -xzf filebeat-8.6.2-linux-x86_64.tar.gz -C /usr/local/ && sudo mv /usr/local/filebeat-8.6.2-linux-x86_64 /usr/local/filebeat
-sudo chown -R ecs-user:ecs-user /usr/local/filebeat
+tar -xzf filebeat-8.6.2-linux-x86_64.tar.gz -C /usr/local/ && mv /usr/local/filebeat-8.6.2-linux-x86_64 /usr/local/filebeat
+# sudo chown -R ecs-user:ecs-user /usr/local/filebeat
 # 修改配置
 vim /usr/local/filebeat/filebeat.yml
 # 测试
@@ -162,7 +162,7 @@ tail -f -n 100 /var/log/messages
 ```
 # 设置为系统服务
 cd /usr/lib/systemd/system && vim filebeat.service
-sudo vim /usr/lib/systemd/system/filebeat.service
+vim /usr/lib/systemd/system/filebeat.service
 
 # filebeat.service 添加以下内容
 [Unit]
@@ -172,8 +172,8 @@ Wants=network-online.target
 After=network-online.target
 
 [Service]
-User=ecs-user
-Group=ecs-user
+User=root
+Group=root
 ExecStart=/usr/local/filebeat/filebeat -e -c /usr/local/filebeat/filebeat.yml
 Restart=always
 
@@ -182,9 +182,9 @@ WantedBy=multi-user.target
 ```
 
 ```
-sudo systemctl enable filebeat
-sudo systemctl start filebeat
-sudo systemctl status filebeat
+systemctl enable filebeat
+systemctl start filebeat
+systemctl status filebeat
 
 sudo systemctl daemon-reload
 sudo systemctl restart filebeat
