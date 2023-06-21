@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: yearning
+  name: yearning
+  namespace: yearning
+spec:
+  ports:
+    - port: 80  # svc内部端口，通过clusterIP访问
+      protocol: TCP
+      targetPort: 8000  # 镜像内服务的端口
+  selector: # 标签选择器，与deployment中的标签保持一致
+    app: yearning
+  type: NodePort  # Service类型
